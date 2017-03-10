@@ -1,18 +1,24 @@
+import logging
+
 import telebot
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_heroku import Heroku
 
-from app import plotting, messages
-from app.models import Plot, Settings
+from server import plotting, messages
+from server.models import Plot, Settings
 import config
+
+
+logger = telebot.logger()
+telebot.logger.setLevel(logging.INFO)
 
 bot = telebot.TeleBot(config.API_TOKEN)
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-heroku = Heroku(app)
-db = SQLAlchemy(app)
+server = Flask(__name__)
+server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+heroku = Heroku(server)
+db = SQLAlchemy(server)
 
 
 @bot.message_handler(commands=['start'])
@@ -185,6 +191,14 @@ def clear(message):
     db.session.commit()
 
 
-@app.route('/')
-def index():
-    return ''
+@server.route("/bot", methods=['POST'])
+def get_message():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
+
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url="https://https://plotbot.herokuapp.com/bot")
+    return "!", 200

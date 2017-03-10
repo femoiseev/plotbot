@@ -1,4 +1,4 @@
-from app import bot
+from server import server
+import os
 
-
-bot.polling(none_stop=True)
+server.run(host='0.0.0.0', port=os.environ.get('PORT', 8443))
