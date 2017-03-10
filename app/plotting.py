@@ -1,7 +1,9 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import re
 import math
+
+import numpy as np
+import matplotlib.pyplot as plt
+
 import config
 
 function_pattern = re.compile('(?:[0-9-+*/^()x]|abs|e\^x|ln|log|a?(?:sin|cos|tan)h?)+')
@@ -39,37 +41,37 @@ def create_python_functions(expressions):
     return functions
 
 
-def draw_plot(chat_id, expressions, min_xs, max_xs, colors, xlim, ylim, xlabel, ylabel, grid_mode):
+def draw_plot(chat_id, plots, settings):
+    expressions = [plot.body for plot in plots]
     functions = create_python_functions(expressions)
     
-    for name, function in functions.items():
-        if name[0] != '_' and name not in math_functions.keys():
-            min_x = min_xs[name]
-            max_x = max_xs[name]
-            color = colors[name]
-            if min_xs is None or max_x is None:
-                min_x = xlim[0]
-                max_x = xlim[1]
+    for plot in plots:
+        if plot.name[0] != '_':
+            min_x = plot.min_x
+            max_x = plot.max_x
+            if min_x is None or max_x is None:
+                min_x = settings.x_min
+                max_x = settings.x_max
             grid = np.linspace(min_x, max_x, 1000)
-            if color is None:
-                plt.plot(grid, function(grid), label=name)
+            if plot.color is None:
+                plt.plot(grid, functions.get(plot.name)(grid), label=plot.name)
             else:
-                plt.plot(grid, function(grid), label=name, color=color)
-                
-    if not (xlim is None or xlim[0] is None or xlim[1] is None):
-        plt.xlim(xlim)
+                plt.plot(grid, functions.get(plot.name)(grid), label=plot.name, color=settings.color)
     
-    if not (ylim is None or ylim[0] is None or ylim[1] is None):
-        plt.ylim(ylim)
-    
-    if xlabel is not None:
-        plt.xlabel(xlabel)
+    if not (settings.x_min is None or settings.x_max is None):
+        plt.xlim((settings.x_min, settings.x_max))
         
-    if ylabel is not None:
-        plt.ylabel(ylabel)
+    if not (settings.y_min is None or settings.y_max is None):
+        plt.ylim((settings.y_min, settings.y_max))
+    
+    if settings.x_label is not None:
+        plt.xlabel(settings.x_label)
+    
+    if settings.y_label is not None:
+        plt.ylabel(settings.y_label)
     
     plt.legend()
-    plt.grid(grid_mode)
+    plt.grid(settings.grid)
     
     plot_path = config.PATH_TO_PLOTS + str(chat_id) + '.png'
     plt.savefig(plot_path)
