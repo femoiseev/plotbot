@@ -10,7 +10,7 @@ from server.models import Plot, Settings
 import config
 
 
-logger = telebot.logger()
+logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
 bot = telebot.TeleBot(config.API_TOKEN)
