@@ -1,1 +1,1 @@
-web: gunicorn server:server
+web: gunicorn -b 0.0.0.0:8443 server:server
