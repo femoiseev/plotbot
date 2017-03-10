@@ -9,7 +9,7 @@ import config
 function_pattern = re.compile('(?:[0-9-+*/^()x]|abs|e\^x|ln|log|a?(?:sin|cos|tan)h?)+')
 math_functions = {'e': np.e, 'log': math.log, 'sin': np.sin, 'cos': np.cos, 'tan': np.tan,
                   'asin': np.arcsin, 'acos': np.arccos, 'atan': np.arctan, 'sinh': np.sinh,
-                  'cosh': np.cosh, 'tanh': np.tanh, 'ln': math.log}
+                  'cosh': np.cosh, 'tanh': np.tanh, 'ln': np.log}
 
 
 def check_expression(expression):
