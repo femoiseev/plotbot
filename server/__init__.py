@@ -102,7 +102,7 @@ def set_limits(message):
             settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
             if settings is None:
                 db.session.commit()
-                start()
+                start(message)
                 settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
             if axis == 'x':
                 settings.x_min = min_value
@@ -126,9 +126,10 @@ def set_label(message):
         settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
         if settings is None:
             db.session.commit()
-            start()
+            start(message)
             settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
         if axis == 'x':
+            settings.x_label = label
             settings.x_label = label
         else:
             settings.y_label = label
@@ -146,7 +147,7 @@ def set_grid(message):
             settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
             if settings is None:
                 db.session.commit()
-                start()
+                start(message)
                 settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
             settings.grid = mode
             db.session.commit()
