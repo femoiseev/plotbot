@@ -39,7 +39,7 @@ def add_plot(message):
         if name is None:
             bot.send_message(message.chat.id, messages.invalid_function)
         else:
-            plot = db.session.query(Plot).filter(Plot.chat_id == message.chat.id and Plot.name == name).first()
+            plot = db.session.query(Plot).filter(Plot.chat_id == message.chat.id, Plot.name == name).first()
             if plot is None:
                 plot = Plot(message.chat.id, name, body)
                 db.session.add(plot)
@@ -57,7 +57,7 @@ def set_color(message):
     if len(args) >= 3:
         name = args[1]
         color = args[2]
-        plot = db.session.query(Plot).filter(Plot.chat_id == message.chat.id and Plot.name == name).first()
+        plot = db.session.query(Plot).filter(Plot.chat_id == message.chat.id, Plot.name == name).first()
         if plot is None:
             bot.send_message(message.chat.id, messages.no_such_function)
         else:
@@ -74,7 +74,7 @@ def set_domain(message):
         name = args[1]
         min_x = float(args[2])
         max_x = float(args[3])
-        plot = db.session.query(Plot).filter(Plot.chat_id == message.chat.id and Plot.name == name).first()
+        plot = db.session.query(Plot).filter(Plot.chat_id == message.chat.id, Plot.name == name).first()
         if plot is None:
             bot.send_message(message.chat.id, messages.no_such_function)
         else:
