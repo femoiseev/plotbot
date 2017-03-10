@@ -10,14 +10,18 @@ import config
 bot = telebot.TeleBot(config.API_TOKEN)
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/database'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 heroku = Heroku(app)
 db = SQLAlchemy(app)
 
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
+    if settings is None:
+        settings = Settings(message.chat.id)
+        db.session.add(settings)
+    db.session.commit()
     bot.send_message(message.chat.id, messages.hello)
 
 
