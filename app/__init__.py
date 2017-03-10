@@ -1,6 +1,7 @@
 import telebot
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_heroku import Heroku
 
 from app import plotting, messages
 from app.models import Plot, Settings
@@ -9,8 +10,9 @@ import config
 bot = telebot.TeleBot(config.API_TOKEN)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/database'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/database'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+heroku = Heroku(app)
 db = SQLAlchemy(app)
 
 

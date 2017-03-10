@@ -4,3 +4,4 @@ numpy==1.12.0
 Flask==0.11.1
 Flask-SQLAlchemy==2.2
 psycopg2==2.7
+flask-heroku==0.1.9
