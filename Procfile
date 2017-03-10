@@ -1,1 +1,1 @@
-web: python3 run.py runserver 0.0.0.0:8443
+web: gunicorn wsgi.py -b 0.0.0.0:8443
