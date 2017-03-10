@@ -56,7 +56,10 @@ def draw_plot(chat_id, plots, settings):
             if plot.color is None:
                 plt.plot(grid, functions.get(plot.name)(grid), label=plot.name)
             else:
-                plt.plot(grid, functions.get(plot.name)(grid), label=plot.name, color=settings.color)
+                try:
+                    plt.plot(grid, functions.get(plot.name)(grid), label=plot.name, color=plot.color)
+                except (KeyError, ValueError):
+                    plt.plot(grid, functions.get(plot.name)(grid), label=plot.name)
     
     if not (settings.x_min is None or settings.x_max is None):
         plt.xlim((settings.x_min, settings.x_max))
