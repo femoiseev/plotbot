@@ -10,7 +10,7 @@ def check_expression(expression):
         expr = parse_expr(expression)
         function = lambdify(x, expr, ('math', 'mpmath', 'sympy'))
         try:
-            function(1)
+            float(function(1))
         except (ValueError, ZeroDivisionError):
             return True
         return True
