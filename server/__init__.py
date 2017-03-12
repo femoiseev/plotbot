@@ -173,7 +173,7 @@ def show(message):
     if plot_path is not None:
         bot.send_photo(message.chat.id, photo=open(plot_path, 'rb'))
     else:
-        bot.send_message(message.chat.id, messages.invalid_function)
+        bot.send_message(message.chat.id, messages.invalid_function_or_limits)
 
 
 @bot.message_handler(commands=['new'])

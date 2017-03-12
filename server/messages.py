@@ -1,4 +1,5 @@
 invalid_function = 'Invalid function'
+invalid_function_or_limits = 'Invalid functions or limits'
 invalid_data = 'Invalid data'
 success_add_plot = 'Plot successfully added'
 hello = 'Hello! I want to draw some plots for you!'
