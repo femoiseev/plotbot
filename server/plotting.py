@@ -72,7 +72,7 @@ def draw_plot(chat_id, plots, settings):
     plt.legend()
     plt.grid(settings.grid)
     
-    plot_path = config.PATH_TO_PLOTS + str(chat_id) + '.png'
+    plot_path = str(chat_id) + '.png'
     plt.savefig(plot_path)
     plt.clf()
     return plot_path

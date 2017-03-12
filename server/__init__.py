@@ -1,4 +1,5 @@
 import logging
+import os
 
 import telebot
 from flask import Flask, request
@@ -7,13 +8,12 @@ from flask_heroku import Heroku
 
 from server import plotting, messages
 from server.models import Plot, Settings
-import config
 
 
 logger = telebot.logger
 telebot.logger.setLevel(logging.INFO)
 
-bot = telebot.TeleBot(config.API_TOKEN)
+bot = telebot.TeleBot(os.environ.get('API_TOKEN'))
 
 server = Flask(__name__)
 server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
