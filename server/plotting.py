@@ -8,7 +8,11 @@ from sympy.abc import x
 def check_expression(expression):
     try:
         expr = parse_expr(expression)
-        lambdify(x, expr, ('math', 'mpmath', 'sympy'))
+        function = lambdify(x, expr, ('math', 'mpmath', 'sympy'))
+        try:
+            function(1)
+        except (ValueError, ZeroDivisionError):
+            return True
         return True
     except (SyntaxError, NameError):
         return False
