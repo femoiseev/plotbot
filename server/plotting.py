@@ -4,8 +4,6 @@ from sympy.parsing.sympy_parser import parse_expr
 from sympy import lambdify
 from sympy.abc import x
 
-import config
-
 
 def check_expression(expression):
     try:
