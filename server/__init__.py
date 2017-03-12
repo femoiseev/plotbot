@@ -170,7 +170,6 @@ def show(message):
         settings.grid = 'on'
         
     plot_path = plotting.draw_plot(message.chat.id, plots, settings)
-    bot.send_photo(message.chat.id, photo=open(plot_path, 'rb'))
     if plot_path is not None:
         bot.send_photo(message.chat.id, photo=open(plot_path, 'rb'))
     else:
