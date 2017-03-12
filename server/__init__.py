@@ -23,10 +23,9 @@ db = SQLAlchemy(server)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
-    if settings is None:
-        settings = Settings(message.chat.id)
-        db.session.add(settings)
+    db.session.query(Settings).filter(Settings.chat_id == message.chat.id).delete()
+    settings = Settings(message.chat.id)
+    db.session.add(settings)
     db.session.commit()
     bot.send_message(message.chat.id, messages.hello)
 
