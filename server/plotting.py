@@ -52,7 +52,7 @@ def draw_plot(chat_id, plots, settings):
                         plt.plot(grid, function(grid), label=plot.name, color=plot.color)
                     except (KeyError, ValueError):
                         plt.plot(grid, function(grid), label=plot.name)
-            except SystemError:
+            except (ValueError, SystemError):
                 return None
     
     if not (settings.x_min is None or settings.x_max is None):
