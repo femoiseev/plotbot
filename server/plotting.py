@@ -14,7 +14,7 @@ def check_expression(expression):
         except (ValueError, ZeroDivisionError):
             return True
         return True
-    except (SyntaxError, NameError):
+    except (SyntaxError, NameError, TypeError):
         return False
 
 
