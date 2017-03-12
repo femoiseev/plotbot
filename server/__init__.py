@@ -159,6 +159,7 @@ def set_grid(message):
 def show(message):
     plots = db.session.query(Plot).filter(Plot.chat_id == message.chat.id).all()
     settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
+    db.session.commit()
     
     if settings is None:
         settings = Settings(message.chat.id)
@@ -170,8 +171,10 @@ def show(message):
         
     plot_path = plotting.draw_plot(message.chat.id, plots, settings)
     bot.send_photo(message.chat.id, photo=open(plot_path, 'rb'))
-    db.session.commit()
-
+    if plot_path is not None:
+        bot.send_photo(message.chat.id, photo=open(plot_path, 'rb'))
+    else:
+        bot.send_message(message.chat.id, messages.invalid_function)
 
 @bot.message_handler(commands=['new'])
 def new_plot(message):

@@ -1,19 +1,19 @@
-import re
-import math
-
 import numpy as np
 import matplotlib.pyplot as plt
+from sympy.parsing.sympy_parser import parse_expr
+from sympy import lambdify
+from sympy.abc import x
 
 import config
 
-function_pattern = re.compile('(?:[0-9-+*/^()xe]|abs|ln|log|a?(?:sin|cos|tan)h?)+')
-math_functions = {'e': np.e, 'log': math.log, 'sin': np.sin, 'cos': np.cos, 'tan': np.tan,
-                  'asin': np.arcsin, 'acos': np.arccos, 'atan': np.arctan, 'sinh': np.sinh,
-                  'cosh': np.cosh, 'tanh': np.tanh, 'ln': np.log}
-
 
 def check_expression(expression):
-    return function_pattern.fullmatch(expression)
+    try:
+        expr = parse_expr(expression)
+        lambdify(x, expr, ('math', 'mpmath', 'sympy'))
+        return True
+    except (SyntaxError, NameError):
+        return False
 
 
 def convert_expression(expression):
@@ -22,29 +22,19 @@ def convert_expression(expression):
         return None, None
     
     name = expression[:name_end]
-    body = expression[name_end + 1:]
+    body = adapt_expression(expression[name_end + 1:])
     
-    if not check_expression(body) or name in math_functions:
+    if not check_expression(body):
         return None, None
     
-    return name, 'def ' + name + '(x): return ' + adapt_expression(body)
+    return name, body
 
 
 def adapt_expression(expression):
     return expression.replace('^', '**')
 
 
-def create_python_functions(expressions):
-    functions = math_functions.copy()
-    for expression in expressions:
-        exec(expression, functions)
-    return functions
-
-
 def draw_plot(chat_id, plots, settings):
-    expressions = [plot.body for plot in plots]
-    functions = create_python_functions(expressions)
-    
     for plot in plots:
         if plot.name[0] != '_':
             min_x = plot.min_x
@@ -53,17 +43,23 @@ def draw_plot(chat_id, plots, settings):
                 min_x = settings.x_min
                 max_x = settings.x_max
             grid = np.linspace(min_x, max_x, 1000)
-            if plot.color is None:
-                plt.plot(grid, functions.get(plot.name)(grid), label=plot.name)
-            else:
-                try:
-                    plt.plot(grid, functions.get(plot.name)(grid), label=plot.name, color=plot.color)
-                except (KeyError, ValueError):
-                    plt.plot(grid, functions.get(plot.name)(grid), label=plot.name)
+            expr = parse_expr(plot.body)
+            function = lambdify(x, expr, ('math', 'mpmath', 'sympy'))
+            
+            try:
+                if plot.color is None:
+                    plt.plot(grid, [function(arg) for arg in grid], label=plot.name)
+                else:
+                    try:
+                        plt.plot(grid, function(grid), label=plot.name, color=plot.color)
+                    except (KeyError, ValueError):
+                        plt.plot(grid, function(grid), label=plot.name)
+            except SystemError:
+                return None
     
     if not (settings.x_min is None or settings.x_max is None):
         plt.xlim((settings.x_min, settings.x_max))
-        
+    
     if not (settings.y_min is None or settings.y_max is None):
         plt.ylim((settings.y_min, settings.y_max))
     
