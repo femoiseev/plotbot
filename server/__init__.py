@@ -125,8 +125,8 @@ def set_label(message):
         label = message.text[len(args[0]) + 1:]
         settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
         if settings is None:
-            db.session.commit()
-            start(message)
+            settings = Settings(message.chat.id)
+            db.session.add(settings)
             settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
         if axis == 'x':
             settings.x_label = label
@@ -146,8 +146,8 @@ def set_grid(message):
         if mode == 'on' or mode == 'off':
             settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
             if settings is None:
-                db.session.commit()
-                start(message)
+                settings = Settings(message.chat.id)
+                db.session.add(settings)
                 settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
             settings.grid = mode
             db.session.commit()
@@ -159,10 +159,11 @@ def set_grid(message):
 def show(message):
     plots = db.session.query(Plot).filter(Plot.chat_id == message.chat.id).all()
     settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
-    db.session.commit()
-    
     if settings is None:
         settings = Settings(message.chat.id)
+        db.session.add(settings)
+    db.session.commit()
+    
     if settings.x_min is None or settings.x_max is None:
         settings.x_min = 0
         settings.x_max = 10
