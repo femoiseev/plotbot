@@ -185,6 +185,8 @@ def new_plot(message):
 @bot.message_handler(commands=['default'])
 def clear_settings(message):
     db.session.query(Settings).filter(Settings.chat_id == message.chat.id).delete()
+    settings = Settings(message.chat.id)
+    db.session.add(settings)
     db.session.commit()
 
 
