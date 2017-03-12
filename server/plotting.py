@@ -33,7 +33,7 @@ def convert_expression(expression):
 
 
 def adapt_expression(expression):
-    return expression.replace('^', '**')
+    return expression.replace('^', '**').replace('e', 'exp(1)')
 
 
 def draw_plot(chat_id, plots, settings):
