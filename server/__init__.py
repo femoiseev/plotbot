@@ -176,6 +176,7 @@ def show(message):
     else:
         bot.send_message(message.chat.id, messages.invalid_function)
 
+
 @bot.message_handler(commands=['new'])
 def new_plot(message):
     db.session.query(Plot).filter(Plot.chat_id == message.chat.id).delete()
