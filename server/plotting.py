@@ -53,7 +53,7 @@ def draw_plot(chat_id, plots, settings):
                 if plot.color is None:
                     plt.plot(grid, [function(arg) for arg in grid], label=plot.name)
                 else:
-                    plt.plot(grid, function(grid), label=plot.name, color=plot.color)
+                    plt.plot(grid, [function(arg) for arg in grid], label=plot.name, color=plot.color)
             except (ValueError, SystemError, OverflowError, KeyError):
                 plt.clf()
                 return None

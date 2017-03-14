@@ -11,7 +11,7 @@ from server.models import Plot, Settings
 
 
 logger = telebot.logger
-telebot.logger.setLevel(logging.INFO)
+telebot.logger.setLevel(logging.ERROR)
 
 bot = telebot.TeleBot(os.environ.get('API_TOKEN'))
 
