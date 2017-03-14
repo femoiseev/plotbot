@@ -59,10 +59,10 @@ def draw_plot(chat_id, plots, settings):
                 return None
     
     if not (settings.x_min is None or settings.x_mplt is None):
-        plt.xlim((settings.x_min, settings.x_mplt))
+        plt.xlim((settings.x_min, settings.x_max))
     
     if not (settings.y_min is None or settings.y_mplt is None):
-        plt.ylim((settings.y_min, settings.y_mplt))
+        plt.ylim((settings.y_min, settings.y_max))
     
     if settings.x_label is not None:
         plt.xlabel(settings.x_label)
