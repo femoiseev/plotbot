@@ -41,11 +41,11 @@ def draw_plot(chat_id, plots, settings):
     for plot in plots:
         if plot.name[0] != '_':
             min_x = plot.min_x
-            mplt_x = plot.mplt_x
-            if min_x is None or mplt_x is None:
+            max_x = plot.max_x
+            if min_x is None or max_x is None:
                 min_x = settings.x_min
-                mplt_x = settings.x_mplt
-            grid = np.linspace(min_x, mplt_x, 1000)
+                max_x = settings.x_mplt
+            grid = np.linspace(min_x, max_x, 1000)
             expr = parse_expr(plot.body)
             function = lambdify(x, expr, ('math', 'mpmath', 'sympy'))
             
