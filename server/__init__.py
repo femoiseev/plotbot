@@ -157,24 +157,27 @@ def set_grid(message):
 
 @bot.message_handler(commands=['show'])
 def show(message):
-    plots = db.session.query(Plot).filter(Plot.chat_id == message.chat.id).all()
-    settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
-    if settings is None:
-        settings = Settings(message.chat.id)
-        db.session.add(settings)
-    db.session.commit()
-    
-    if settings.x_min is None or settings.x_max is None:
-        settings.x_min = 0
-        settings.x_max = 10
-    if settings.grid is None:
-        settings.grid = 'on'
+    try:
+        plots = db.session.query(Plot).filter(Plot.chat_id == message.chat.id).all()
+        settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
+        if settings is None:
+            settings = Settings(message.chat.id)
+            db.session.add(settings)
+        db.session.commit()
         
-    plot_path = plotting.draw_plot(message.chat.id, plots, settings)
-    if plot_path is not None:
-        bot.send_photo(message.chat.id, photo=open(plot_path, 'rb'))
-    else:
-        bot.send_message(message.chat.id, messages.invalid_function_or_limits)
+        if settings.x_min is None or settings.x_max is None:
+            settings.x_min = 0
+            settings.x_max = 10
+        if settings.grid is None:
+            settings.grid = 'on'
+            
+        plot_path = plotting.draw_plot(message.chat.id, plots, settings)
+        if plot_path is not None:
+            bot.send_photo(message.chat.id, photo=open(plot_path, 'rb'))
+        else:
+            bot.send_message(message.chat.id, messages.invalid_function_or_limits)
+    except Exception as e:
+        bot.send_message(message.chat.id, str(e))
 
 
 @bot.message_handler(commands=['new'])
