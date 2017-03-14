@@ -74,6 +74,9 @@ def draw_plot(chat_id, plots, settings):
     plt.grid(settings.grid)
     
     plot_path = str(chat_id) + '.png'
-    plt.savefig(plot_path)
+    try:
+        plt.savefig(plot_path)
+    except ValueError:
+        plot_path = None
     plt.clf()
     return plot_path
