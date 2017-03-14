@@ -37,14 +37,15 @@ def adapt_expression(expression):
 
 
 def draw_plot(chat_id, plots, settings):
+    plt.clf()
     for plot in plots:
         if plot.name[0] != '_':
             min_x = plot.min_x
-            max_x = plot.max_x
-            if min_x is None or max_x is None:
+            mplt_x = plot.mplt_x
+            if min_x is None or mplt_x is None:
                 min_x = settings.x_min
-                max_x = settings.x_max
-            grid = np.linspace(min_x, max_x, 1000)
+                mplt_x = settings.x_mplt
+            grid = np.linspace(min_x, mplt_x, 1000)
             expr = parse_expr(plot.body)
             function = lambdify(x, expr, ('math', 'mpmath', 'sympy'))
             
@@ -52,18 +53,16 @@ def draw_plot(chat_id, plots, settings):
                 if plot.color is None:
                     plt.plot(grid, [function(arg) for arg in grid], label=plot.name)
                 else:
-                    try:
-                        plt.plot(grid, function(grid), label=plot.name, color=plot.color)
-                    except (KeyError, ValueError):
-                        plt.plot(grid, function(grid), label=plot.name)
-            except (ValueError, SystemError, OverflowError):
+                    plt.plot(grid, function(grid), label=plot.name, color=plot.color)
+            except (ValueError, SystemError, OverflowError, KeyError):
+                plt.clf()
                 return None
     
-    if not (settings.x_min is None or settings.x_max is None):
-        plt.xlim((settings.x_min, settings.x_max))
+    if not (settings.x_min is None or settings.x_mplt is None):
+        plt.xlim((settings.x_min, settings.x_mplt))
     
-    if not (settings.y_min is None or settings.y_max is None):
-        plt.ylim((settings.y_min, settings.y_max))
+    if not (settings.y_min is None or settings.y_mplt is None):
+        plt.ylim((settings.y_min, settings.y_mplt))
     
     if settings.x_label is not None:
         plt.xlabel(settings.x_label)
