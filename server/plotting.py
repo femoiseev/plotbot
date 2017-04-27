@@ -71,7 +71,7 @@ def draw_plot(chat_id, plots, settings):
         plt.ylabel(settings.y_label)
     
     plt.legend()
-    plt.grid(settings.grid)
+    plt.grid(b=settings.grid, ls=':')
     
     plot_path = str(chat_id) + '.png'
     try:
