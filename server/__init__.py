@@ -69,6 +69,7 @@ def set_color(message):
         else:
             plot.color = color
         db.session.commit()
+        bot.send_message(message.chat.id, messages.color_changed)
     else:
         bot.send_message(message.chat.id, messages.too_few_arguments)
 
@@ -78,15 +79,19 @@ def set_domain(message):
     args = message.text.split(' ')
     if len(args) >= 4:
         name = args[1]
-        min_x = float(args[2])
-        max_x = float(args[3])
-        plot = db.session.query(Plot).filter(Plot.chat_id == message.chat.id, Plot.name == name).first()
-        if plot is None:
-            bot.send_message(message.chat.id, messages.no_such_function)
-        else:
-            plot.min_x = min_x
-            plot.max_x = max_x
-        db.session.commit()
+        try:
+            min_x = float(args[2])
+            max_x = float(args[3])
+            plot = db.session.query(Plot).filter(Plot.chat_id == message.chat.id, Plot.name == name).first()
+            if plot is None:
+                bot.send_message(message.chat.id, messages.no_such_function)
+            else:
+                plot.min_x = min_x
+                plot.max_x = max_x
+            db.session.commit()
+            bot.send_message(message.chat.id, messages.domain_changed)
+        except ValueError:
+            bot.send_message(message.chat.id, messages.invalid_data)
     else:
         bot.send_message(message.chat.id, messages.too_few_arguments)
 
@@ -111,6 +116,7 @@ def set_limits(message):
                 settings.y_min = min_value
                 settings.y_max = max_value
             db.session.commit()
+            bot.send_message(message.chat.id, messages.limits_changed)
         except (ValueError, IndexError):
             bot.send_message(message.chat.id, messages.invalid_data)
     else:
@@ -134,6 +140,7 @@ def set_label(message):
         else:
             settings.y_label = label
         db.session.commit()
+        bot.send_message(message.chat.id, messages.label_changed)
     else:
         bot.send_message(message.chat.id, messages.too_few_arguments)
 
@@ -151,6 +158,9 @@ def set_grid(message):
                 settings = db.session.query(Settings).filter(Settings.chat_id == message.chat.id).first()
             settings.grid = mode
             db.session.commit()
+            bot.send_message(message.chat.id, messages.grid_changed)
+        else:
+            bot.send_message(message.chat.id, messages.invalid_data)
     else:
         bot.send_message(message.chat.id, messages.too_few_arguments)
 
@@ -181,6 +191,7 @@ def show(message):
 def new_plot(message):
     db.session.query(Plot).filter(Plot.chat_id == message.chat.id).delete()
     db.session.commit()
+    bot.send_message(message.chat.id, messages.plots_deleted)
 
 
 @bot.message_handler(commands=['default'])
@@ -189,12 +200,15 @@ def clear_settings(message):
     settings = Settings(message.chat.id)
     db.session.add(settings)
     db.session.commit()
+    bot.send_message(message.chat.id, messages.settings_cleared)
 
 
 @bot.message_handler(commands=['clear'])
 def clear(message):
     db.session.query(Plot).filter(Plot.chat_id == message.chat.id).delete()
+    bot.send_message(message.chat.id, messages.plots_deleted)
     db.session.query(Settings).filter(Settings.chat_id == message.chat.id).delete()
+    bot.send_message(message.chat.id, messages.settings_cleared)
     db.session.commit()
 
 
