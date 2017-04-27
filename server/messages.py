@@ -5,6 +5,13 @@ success_add_plot = 'Plot successfully added'
 hello = 'Hello! I want to draw some plots for you!'
 too_few_arguments = 'Too few arguments'
 no_such_function = 'No such function'
+grid_changed = 'Grid successfully changed'
+domain_changed = 'Domain successfully changed'
+label_changed = 'Label successfully changed'
+color_changed = 'Color successfully changed'
+plots_deleted = 'Plots successfully deleted'
+settings_cleared = 'Settings successfully cleared'
+limits_changed = 'Limits successfully changed'
 help_message = '''I can work with following commands:
 /start - Start work
 /plot - Add plot to picture: <name> = <body>
