@@ -70,7 +70,7 @@ def draw_plot(chat_id, plots, settings):
     if settings.y_label is not None:
         plt.ylabel(settings.y_label)
     
-    plt.legend()
+    plt.legend(loc='best')
     plt.grid(b=settings.grid, ls=':')
     
     plot_path = str(chat_id) + '.png'
