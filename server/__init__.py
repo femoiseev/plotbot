@@ -29,6 +29,7 @@ def start(message):
     db.session.add(settings)
     db.session.commit()
     bot.send_message(message.chat.id, messages.hello)
+    logger.log(level=logging.DEBUG, msg='start at chat: ' + str(message.chat.id))
 
 
 @bot.message_handler(commands=['help'])
