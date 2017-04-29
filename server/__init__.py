@@ -16,6 +16,7 @@ telebot.logger.setLevel(logging.DEBUG)
 bot = telebot.TeleBot(os.environ.get('API_TOKEN'))
 
 server = Flask(__name__)
+server.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 heroku = Heroku(server)
 db = SQLAlchemy(server)
