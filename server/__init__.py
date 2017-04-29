@@ -23,16 +23,12 @@ db = SQLAlchemy(server)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    logger.log(level=logging.DEBUG, msg='start at chat: ' + str(message.chat.id))
-    try:
-        db.session.query(Settings).filter(Settings.chat_id == message.chat.id).delete()
-        db.session.query(Plot).filter(Plot.chat_id == message.chat.id).delete()
-        settings = Settings(message.chat.id)
-        db.session.add(settings)
-        db.session.commit()
-        bot.send_message(message.chat.id, messages.hello)
-    except Exception as e:
-        logger.log(level=logging.DEBUG, msg='Error while start: ' + str(e))
+    db.session.query(Settings).filter(Settings.chat_id == message.chat.id).delete()
+    db.session.query(Plot).filter(Plot.chat_id == message.chat.id).delete()
+    settings = Settings(message.chat.id)
+    db.session.add(settings)
+    db.session.commit()
+    bot.send_message(message.chat.id, messages.hello)
 
 
 @bot.message_handler(commands=['help'])
