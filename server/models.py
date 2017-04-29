@@ -6,7 +6,7 @@ db = SQLAlchemy()
 class Plot(db.Model):
     __tablename__ = 'plots'
     
-    chat_id = db.Column(db.Integer, primary_key=True)
+    chat_id = db.Column(db.BigInteger, primary_key=True)
     name = db.Column(db.String(120), primary_key=True)
     body = db.Column(db.String(120), nullable=False)
     min_x = db.Column(db.REAL)
@@ -22,7 +22,7 @@ class Plot(db.Model):
 class Settings(db.Model):
     __tablename__ = 'settings'
     
-    chat_id = db.Column(db.Integer, primary_key=True)
+    chat_id = db.Column(db.BigInteger, primary_key=True)
     x_min = db.Column(db.REAL)
     x_max = db.Column(db.REAL)
     y_min = db.Column(db.REAL)
